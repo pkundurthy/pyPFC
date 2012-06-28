@@ -1,6 +1,8 @@
 
 *.pyc
 *~
+pickledData/*
+pickledData/*~
 pickledData/*.gz
 pickledData/*.data
 pickledData/*.scr
