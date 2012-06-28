@@ -1,0 +1,10 @@
+
+*.pyc
+*~
+pickledData/*.gz
+pickledData/*.data
+pickledData/*.scr
+pickledData/*.spec
+pickledData/*.tsv
+
+
