@@ -1,6 +1,7 @@
 
 import cPickle as cP
 from universal import *
+from allende import getParams
 
 telData =cP.load(open(picklePath+'telescope.pickle','rb'))
 
@@ -119,32 +120,42 @@ class planet:
 
 class stellar:
 
-    def __init__(self, mass):
+    def __init__(self, **kwargs):
         """
             mass - solar masses
             age - years
             const - (python object)
         """
 
-        self.mass = mass
+        for kw in kwargs:
+            if kw.lower() == 'mass':
+                self.mass = kwargs[kw]
+                evolData = 
 
-        self.rad =
-        self.teff =
-        self.logg =
-        self.lbol =
-        self.vmag =
-        self.bmag =
-        self.mbol =
+            if kw.lower() == 'dist':
+                self.dist = kwargs[kw]
+
+        # seperate loop for hipparchos data 
+        # to override other key words
+        for kw in kwargs:
+            if kw.lower() == 'hip':
+                hip == kwargs[kw]
+                hippData = allende.getParams(hip)
+                self.teff = hippData['teff']
+                self.logg = hippData['logg']
+                self.dist = hippData['dist']
+                self.mass = hippData['mass']
+                self.rad = hippData['rad']
+                #self.lbol = hippData['lbol']
+                self.vmag_abs = hippData['vmag_abs']
+                self.vmag_app = hippData['vmag_app']
+                self.bv = hippData['bv']
+                #self.mbol = hippData['mbol']
+                self.bc = hippData['bc']
 
     def wvparams(self, lbd):
         """ lbd - Angstrom """
-        
-        self.lnu =
-
-    def setdist(self, dist):
-        """ dist - parsecs """
-
-        self.dist= dist
+        self.lnu = fn_lnu_nextgen(lbd, self.teff, self.rad)
 
 class system:
 

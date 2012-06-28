@@ -162,9 +162,3 @@ def fn_xihzout(tp,wv,uq,stel):
     rhz2 = fn_rhzout(stel)
     rmax = fn_rmax(tp,wv,uq)
     return rhz2/rmax
-
-
-
-
-
-
