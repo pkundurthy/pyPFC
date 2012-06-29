@@ -2,7 +2,7 @@
 import cPickle as cP
 from universal import *
 from allende import getParams
-
+import numpy as np
 telData =cP.load(open(picklePath+'telescope.pickle','rb'))
 
 class const:
@@ -10,7 +10,7 @@ class const:
         PURPOSE:
         Initializes a data structure with a list of user specified
         constants from the file 'constants.txt'
-        
+
         DATA:
         #constants in cgs
         #['CLIGHT','GRAVC','MSUN','RADSUN','HPLANCK','BOLTZMANNK',
@@ -130,7 +130,14 @@ class stellar:
         for kw in kwargs:
             if kw.lower() == 'mass':
                 self.mass = kwargs[kw]
-                evolData = 
+                evolData = evol.getAllPars(mass)
+                self.logg = evolData['logg']
+                self.rad = evolData['rad']
+                self.teff = evolData['teff']
+                self.vmag_abs = evolData['vmag_abs']
+                self.bv = evolData['bv']
+                self.mbol = evolData['mbol']
+                self.logl = evolData['logl']
 
             if kw.lower() == 'dist':
                 self.dist = kwargs[kw]
@@ -155,7 +162,7 @@ class stellar:
 
     def wvparams(self, lbd):
         """ lbd - Angstrom """
-        self.lnu = fn_lnu_nextgen(lbd, self.teff, self.rad)
+        self.lnu = fn_lnu_nextgen(lbd, self.teff, self.logg, self.rad, const)
 
 class system:
 

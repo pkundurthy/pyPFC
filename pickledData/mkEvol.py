@@ -37,25 +37,24 @@ OutDict = {}
 for line in File:
     if not line.startswith('#'):
         lSplit = map(str, line.split())
-        if lSplit[0].strip() == '6.0':
+        print lSplit[0]
+        if lSplit[0].strip() == '6.00':
             L6.append(line)
-        if lSplit[0].strip() == '7.0':
+        if lSplit[0].strip() == '7.00':
             L7.append(line)
-        if lSplit[0].strip() == '8.0':
+        if lSplit[0].strip() == '8.00':
             L8.append(line)
-        if lSplit[0].strip() == '9.0':
+        if lSplit[0].strip() == '9.00':
             L9.append(line)
-        if lSplit[0].strip() == '10.0':
+        if lSplit[0].strip() == '10.00':
             L10.append(line)
 
 
-    OutDict['6.0'] = EvolTrack(L6)
-    OutDict['7.0'] = EvolTrack(L7)
-    OutDict['8.0'] = EvolTrack(L8)
-    OutDict['9.0'] = EvolTrack(L9)
-    OutDict['10.0'] = EvolTrack(L10)
-
-        
+OutDict['6.0'] = EvolTrack(L6)
+OutDict['7.0'] = EvolTrack(L7)
+OutDict['8.0'] = EvolTrack(L8)
+OutDict['9.0'] = EvolTrack(L9)
+OutDict['10.0'] = EvolTrack(L10)
 
 fileOut = open('marigoETAL2008.pickle','wb')
 pickle.dump(OutDict,fileOut,-1)

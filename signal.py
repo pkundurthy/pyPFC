@@ -8,7 +8,6 @@ def fn_Qs(tp, wv, uq):
            (uq.dist*const.pc2cm)**2.0e0))*(tp.dlnlbd)*\
            (uq.Texp*const.hour2sec)*1.509188961e26
 
-
 def fn_Qp(tp, wv, uq):
     """                 """
     

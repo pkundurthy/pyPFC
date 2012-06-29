@@ -6,7 +6,6 @@ from universal import *
 
 allende = cP.load(open(picklePath+'allende99.pickle','rb'))
 
-
 def colormag():
     
     bv = []
@@ -17,7 +16,6 @@ def colormag():
         v.append(allende[hid]['vmag_abs'])
 
     return bv, v
-    
     
 def coordinates():
     

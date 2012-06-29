@@ -2,6 +2,8 @@
 
 #__all__ = ['sets','signal','allende']
 
-##import sets
+import sets
 #import signal
 import allende
+import evol
+import nextgen
