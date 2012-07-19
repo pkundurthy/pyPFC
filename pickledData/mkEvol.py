@@ -1,6 +1,7 @@
 
 import cPickle as pickle
 import numpy as np
+import sys
 
 
 def EvolTrack(L):
@@ -23,43 +24,53 @@ def EvolTrack(L):
         bmag.append(float(lsplit[8].strip()))
         vmag.append(float(lsplit[9].strip()))
 
-    return {'mass':mass,'logL':logL,'teff':10**(np.array(logTeff)),'logg':np.array(logg),'mbol':mbol,'bv':np.array(bmag)-np.array(vmag),'vmag_abs':np.array(vmag)}
+    return {'mass':mass,'logL':logL,'logteff':np.array(logTeff),'logg':np.array(logg),'mbol':mbol,'bv':np.array(bmag)-np.array(vmag),'vmag_abs':np.array(vmag)}
 
 DataFile = open('output.MarigoETAL2008.data','r')
 File = DataFile.readlines()
 
-L6 = []
-L7 = []
-L8 = []
-L9 = []
-L10 = []
-OutDict = {}
+ListAge = []
 for line in File:
     if not line.startswith('#'):
         lSplit = map(str, line.split())
-        print lSplit[0]
-        if lSplit[0].strip() == '6.00':
-            L6.append(line)
-        if lSplit[0].strip() == '7.00':
-            L7.append(line)
-        if lSplit[0].strip() == '8.00':
-            L8.append(line)
-        if lSplit[0].strip() == '9.00':
-            L9.append(line)
-        if lSplit[0].strip() == '10.00':
-            L10.append(line)
+        ListAge.append(lSplit[0].strip())
 
+AgeDict = {}
+OutDict = {}
+print set(ListAge)
+for age in list(set(ListAge)):
+    AgeDict[str(age)] = []
+    
+for line in File:
+    if not line.startswith('#'):
+        lSplit = map(str, line.split())
+        AgeDict[lSplit[0]].append(line)
 
-OutDict['6.0'] = EvolTrack(L6)
-OutDict['7.0'] = EvolTrack(L7)
-OutDict['8.0'] = EvolTrack(L8)
-OutDict['9.0'] = EvolTrack(L9)
-OutDict['10.0'] = EvolTrack(L10)
+for age in AgeDict.keys():
+    OutDict[age] = EvolTrack(AgeDict[age])
+    
+
+RangeMass = {} 
+for YY in OutDict.keys():
+    RangeMass[YY] = (np.min(OutDict[YY]['mass']),np.max(OutDict[YY]['mass']))
+    
+ageSort = []
+keyList = []
+for key in OutDict.keys():
+    ageSort.append(float(key))
+    keyList.append(key)
+    
+AgeMatch = []
+dummy1 = np.abs(np.array(ageSort) - 9.65e0)
+index_sort = np.argsort(dummy1)
+for i in index_sort:
+    AgeMatch.append(keyList[i])
+prefferdAge = keyList[index_sort[0]]
+
+OutTuple = OutDict, AgeMatch, RangeMass
 
 fileOut = open('marigoETAL2008.pickle','wb')
-pickle.dump(OutDict,fileOut,-1)
+pickle.dump(OutTuple,fileOut,-1)
 fileOut.close()
-
-
 
 

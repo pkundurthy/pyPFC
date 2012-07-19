@@ -2,7 +2,6 @@
 import os
 import sys
 import numpy as num
-import scipy.interpolate
 import cPickle as pickle
 import pylab as plt
 

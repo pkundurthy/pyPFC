@@ -2,6 +2,8 @@
 import cPickle as cP
 from universal import *
 from allende import getParams
+from evol import getAllPars
+from nextgen import fn_lnu_nextgen
 import numpy as np
 telData =cP.load(open(picklePath+'telescope.pickle','rb'))
 
@@ -55,6 +57,7 @@ class const:
         self.year2sec  = 3.1536e7
         self.deg2rad   = 1.74532925e-2
         self.rad2asec  = 206264.806247e0
+
         
 class telescope:
     """
@@ -83,7 +86,7 @@ class telescope:
         self.c0     = telData[telname]['C0']
         self.eps    = telData[telname]['eps']
         self.sfac   = telData[telname]['Sfac']
-        self.ldb0   = telData[telname]['lbd0']
+        self.lbd0   = telData[telname]['lbd0']
         self.dlnlbd = telData[telname]['dlnlbd']
         self.xrd    = telData[telname]['XRD']
         self.gain   = telData[telname]['Gain']
@@ -92,7 +95,7 @@ class telescope:
 
 class observation:
     
-    def __init__(self, lbd, texp, sndet):
+    def __init__(self, lbd, texp, sndet, npix, tauz):
         """
             lbd - Angstrom
             texp - hours
@@ -102,12 +105,21 @@ class observation:
         self.lbd = lbd
         self.texp = texp
         self.sndet = sndet
+        self.npix = npix
+        self.tauz = tauz
 
+class zodi:
+    
+    def __init__(self, tauZ, tauEZ):
+        
+        self.tauz = tauZ
+        self.tauez = tauEZ
+        
 class planet:
     
     def __init__(self, rp, r, alf, plbd):
         """
-            rp - Earth radii
+            rp - planetary radius in km
             r - AU
             alg - degrees
             plbd -
@@ -126,18 +138,22 @@ class stellar:
             age - years
             const - (python object)
         """
+        
+        ct = const()
 
         for kw in kwargs:
             if kw.lower() == 'mass':
                 self.mass = kwargs[kw]
-                evolData = evol.getAllPars(mass)
+                evolData = getAllPars(self.mass)
                 self.logg = evolData['logg']
-                self.rad = evolData['rad']
-                self.teff = evolData['teff']
+                rad = np.sqrt( (ct.gravc*self.mass*ct.msun)/(10**(self.logg)))
+                self.rad = rad/ct.radsun
+                teff = 10**evolData['logteff']
+                self.teff = teff
                 self.vmag_abs = evolData['vmag_abs']
                 self.bv = evolData['bv']
                 self.mbol = evolData['mbol']
-                self.logl = evolData['logl']
+                self.logl = evolData['logL']
 
             if kw.lower() == 'dist':
                 self.dist = kwargs[kw]
@@ -147,7 +163,7 @@ class stellar:
         for kw in kwargs:
             if kw.lower() == 'hip':
                 hip == kwargs[kw]
-                hippData = allende.getParams(hip)
+                hippData = getParams(hip)
                 self.teff = hippData['teff']
                 self.logg = hippData['logg']
                 self.dist = hippData['dist']
@@ -162,11 +178,37 @@ class stellar:
 
     def wvparams(self, lbd):
         """ lbd - Angstrom """
-        self.lnu = fn_lnu_nextgen(lbd, self.teff, self.logg, self.rad, const)
+        ct = const()
+        self.lnu = fn_lnu_nextgen(lbd, self.teff, self.logg, self.rad, ct)
 
 class system:
 
-    def __init__(self, planet, stellar):
+    def __init__(self, planet, stellar,tauEZ):
 
         self.planet = planet
         self.stellar = stellar
+        self.tauez = tauEZ
+        
+class wave:
+
+    def __init__(self, system, obs):
+        sol = stellar(mass = 1.0)
+        sol.wvparams(obs.lbd)
+
+        self.lbd = obs.lbd
+        self.lnu = system.stellar.lnu
+        self.lnusol = sol.lnu
+        self.plbd = system.planet.plbd
+
+class unique:
+    
+    def __init__(self, system, obs):
+        
+        self.texp  = obs.texp
+        self.sndet = obs.sndet
+        self.dist  = system.stellar.dist
+        self.r     = system.planet.r
+        self.rp    = system.planet.rp
+        self.alf   = system.planet.alf
+        self.tauz  = obs.tauz
+        self.tauez = system.tauez
