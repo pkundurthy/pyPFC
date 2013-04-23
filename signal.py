@@ -1,33 +1,32 @@
 import numpy as np
-from sets import const
-const = const()
+from universal import const
 
 def fn_Qs(tp, wv, uq):
     
-    return ((tp.rtel*const.m2cm)**2.0e0)*tp.eps*(wv.lnu/(4.0e0*\
-           (uq.dist*const.pc2cm)**2.0e0))*(tp.dlnlbd)*\
-           (uq.texp*const.hour2sec)*1.509188961e26
+    return ((tp.rtel*const['m2cm'])**2.0e0)*tp.eps*(wv.lnu/(4.0e0*\
+           (uq.dist*const['pc2cm'])**2.0e0))*(tp.dlnlbd)*\
+           (uq.texp*const['hour2sec'])*1.509188961e26
 
 def fn_Qp(tp, wv, uq):
     """                 """
     
-    return fn_Qs(tp,wv,uq)*wv.plbd*(((uq.rp*const.km2cm)/\
-           (uq.r*const.au2cm))**2.0e0)*(np.cos(uq.alf/2.0e0))**4.0e0
+    return fn_Qs(tp,wv,uq)*wv.plbd*(((uq.rp*const['km2cm'])/\
+           (uq.r*const['au2cm']))**2.0e0)*(np.cos(uq.alf/2.0e0))**4.0e0
            
 
 def fn_Qz(tp, wv, uq):
     """                 """
     
-    return ((tp.rtel*const.m2cm)**2.0e0)*tp.eps*wv.lnusol*tp.dlnlbd*\
-    (uq.texp*const.hour2sec)*uq.tauz*tp.sfac*(((wv.lbd*const.A2cm)/\
-    (2.0e0*(tp.rtel*const.m2cm)))**2.0e0)*(0.1685855867e0)
+    return ((tp.rtel*const['m2cm'])**2.0e0)*tp.eps*wv.lnusol*tp.dlnlbd*\
+    (uq.texp*const['hour2sec'])*uq.tauz*tp.sfac*(((wv.lbd*const['A2cm'])/\
+    (2.0e0*(tp.rtel*const['m2cm'])))**2.0e0)*(0.1685855867e0)
 
 def fn_Qez(tp, wv, uq):
     
-    return ((tp.rtel*const.m2cm)**2.0e0)*tp.eps*wv.lnu*tp.dlnlbd*\
-    (uq.texp*const.hour2sec)*uq.tauez*tp.sfac*(((wv.lbd*const.A2cm)/\
-    (2.0e0*(tp.rtel*const.m2cm)))**2.0e0)*(3.772972403e25/(((uq.r*\
-    const.au2cm)*np.sin(uq.alf))**2.0e0))
+    return ((tp.rtel*const['m2cm'])**2.0e0)*tp.eps*wv.lnu*tp.dlnlbd*\
+    (uq.texp*const['hour2sec'])*uq.tauez*tp.sfac*(((wv.lbd*const['A2cm'])/\
+    (2.0e0*(tp.rtel*const['m2cm'])))**2.0e0)*(3.772972403e25/(((uq.r*\
+    const['au2cm'])*np.sin(uq.alf))**2.0e0))
 
 def fn_Qpsf(tp, wv, uq):
     

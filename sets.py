@@ -7,56 +7,56 @@ from nextgen import fn_lnu_nextgen
 import numpy as np
 telData =cP.load(open(picklePath+'telescope.pickle','rb'))
 
-class const:
-    """
-        PURPOSE:
-        Initializes a data structure with a list of user specified
-        constants from the file 'constants.txt'
+#class const:
+    #"""
+        #PURPOSE:
+        #Initializes a data structure with a list of user specified
+        #constants from the file 'constants.txt'
 
-        DATA:
-        #constants in cgs
-        #['CLIGHT','GRAVC','MSUN','RADSUN','HPLANCK','BOLTZMANNK',
-        #'A2CM','PC2CM','AU2CM','KM2CM','M2CM','HOUR2SEC','MIN2SEC',
-        #'DAY2SEC','YEAR2SEC','DEG2RAD','RAD2ASEC']
-        #
-        clight          |   2.99792458d10          |    cm/sec
-        msun            |   1.99d33                |    g
-        gravc           |   6.67259d-8             |    cm^3 g^-1 sec^-2
-        radsun          |   6.96d10                |    cm
-        hplanck         |   6.6260755d-27          |    erg sec
-        boltzmannk      |   1.380658d-16           |    erg/K
-        A2cm            |   1.0d-8                 |    cm
-        pc2cm           |   3.086d18               |    cm
-        au2cm           |   1.496d13               |    cm
-        km2cm           |   1.0d5                  |    cm
-        m2cm            |   1.0d2                  |    cm
-        hour2sec        |   3600.d0                |    sec
-        min2sec         |   60.0d0                 |    sec
-        day2sec         |   8.64d4                 |    sec
-        year2sec        |   3.1536d7               |    sec
-        deg2rad         |   1.74532925d-2          |    radians
-        rad2asec        |   206264.806247          |    arcsec
-        lowangle        |   5d-12                  |    radians (1 micro-arcsec) 
-        """
+        #DATA:
+        ##constants in cgs
+        ##['CLIGHT','GRAVC','MSUN','RADSUN','HPLANCK','BOLTZMANNK',
+        ##'A2CM','PC2CM','AU2CM','KM2CM','M2CM','HOUR2SEC','MIN2SEC',
+        ##'DAY2SEC','YEAR2SEC','DEG2RAD','RAD2ASEC']
+        ##
+        #clight          |   2.99792458d10          |    cm/sec
+        #msun            |   1.99d33                |    g
+        #gravc           |   6.67259d-8             |    cm^3 g^-1 sec^-2
+        #radsun          |   6.96d10                |    cm
+        #hplanck         |   6.6260755d-27          |    erg sec
+        #boltzmannk      |   1.380658d-16           |    erg/K
+        #A2cm            |   1.0d-8                 |    cm
+        #pc2cm           |   3.086d18               |    cm
+        #au2cm           |   1.496d13               |    cm
+        #km2cm           |   1.0d5                  |    cm
+        #m2cm            |   1.0d2                  |    cm
+        #hour2sec        |   3600.d0                |    sec
+        #min2sec         |   60.0d0                 |    sec
+        #day2sec         |   8.64d4                 |    sec
+        #year2sec        |   3.1536d7               |    sec
+        #deg2rad         |   1.74532925d-2          |    radians
+        #rad2asec        |   206264.806247          |    arcsec
+        #lowangle        |   5d-12                  |    radians (1 micro-arcsec) 
+        #"""
     
-    def __init__(self):
-        self.clight    = 2.99792458e10
-        self.msun      = 1.99e33
-        self.gravc     = 6.67259e-8
-        self.radsun    = 6.96e10
-        self.hplanck   = 6.6260755e-27
-        self.boltzmann = 1.380658e-16
-        self.A2cm      = 1.0e-8
-        self.pc2cm     = 3.086e18
-        self.au2cm     = 1.496e13
-        self.km2cm     = 1.0e5
-        self.m2cm      = 1.0e2
-        self.hour2sec  = 3600e0
-        self.min2sec   = 60e0
-        self.day2sec   = 8.64e4
-        self.year2sec  = 3.1536e7
-        self.deg2rad   = 1.74532925e-2
-        self.rad2asec  = 206264.806247e0
+    #def __init__(self):
+        #self.clight    = 2.99792458e10
+        #self.msun      = 1.99e33
+        #self.gravc     = 6.67259e-8
+        #self.radsun    = 6.96e10
+        #self.hplanck   = 6.6260755e-27
+        #self.boltzmann = 1.380658e-16
+        #self.A2cm      = 1.0e-8
+        #self.pc2cm     = 3.086e18
+        #self.au2cm     = 1.496e13
+        #self.km2cm     = 1.0e5
+        #self.m2cm      = 1.0e2
+        #self.hour2sec  = 3600e0
+        #self.min2sec   = 60e0
+        #self.day2sec   = 8.64e4
+        #self.year2sec  = 3.1536e7
+        #self.deg2rad   = 1.74532925e-2
+        #self.rad2asec  = 206264.806247e0
 
         
 class telescope:
@@ -138,16 +138,14 @@ class stellar:
             age - years
             const - (python object)
         """
-        
-        ct = const()
 
         for kw in kwargs:
             if kw.lower() == 'mass':
                 self.mass = kwargs[kw]
                 evolData = getAllPars(self.mass)
                 self.logg = evolData['logg']
-                rad = np.sqrt( (ct.gravc*self.mass*ct.msun)/(10**(self.logg)))
-                self.rad = rad/ct.radsun
+                rad = np.sqrt( (const['gravc']*self.mass*const['msun'])/(10**(self.logg)))
+                self.rad = rad/const['radsun']
                 teff = 10**evolData['logteff']
                 self.teff = teff
                 self.vmag_abs = evolData['vmag_abs']
@@ -178,8 +176,7 @@ class stellar:
 
     def wvparams(self, lbd):
         """ lbd - Angstrom """
-        ct = const()
-        self.lnu = fn_lnu_nextgen(lbd, self.teff, self.logg, self.rad, ct)
+        self.lnu = fn_lnu_nextgen(lbd, self.teff, self.logg, self.rad)
 
 class system:
 
