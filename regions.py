@@ -90,7 +90,7 @@ def fn_r1(tp,wv,uq):
     r1 = cm2au*((tp.iwa/np.sin(uq.alf))*((wv.lbd*const['A2cm'])/(2.0e0*(tp.rtel*const['m2cm'])))*(uq.dist*const['pc2cm']))
     return r1
 
-def fn_r2(tp, wv, uq):
+def fn_r2(tp, wv, uq, list_noise):
     # Input units are in standard initial units (see p_initialize)
     # Output is in AU
     cm2au = 1.0e0/const['au2cm']
@@ -112,7 +112,7 @@ def fn_r2(tp, wv, uq):
         fnQrd = fn_Qrd(tp,wv,uq)
         r2 = (((Cp**2.0e0)/(fnQrd))*(uq.sndet**(-2.0e0)))**(0.25e0)
     
-    MultiCondition == False
+    MultiCondition = False
     if ('Z' in list_noise) and ('EZ' in list_noise) and ('PSF' in list_noise):
         Qx = fnQz + fnQpsf
         MultiCondition = True
@@ -128,11 +128,13 @@ def fn_r2(tp, wv, uq):
 def fn_rhzin(stel):
     # input stel.lbol must be in solar units
     # output is in AU
+    # the original Kasting et al. inner HZ limit
     return 0.95e0*np.sqrt(stel.lbol)
 
 def fn_rhzout(stel):
     # input stel.lbol must be in solar units
     # output is in AU
+    # the original Kasting et al. outer HZ limit
     return 1.35e0*np.sqrt(stel.lbol)
     
 def fn_rmax(tp, wv, uq, list_noise):
